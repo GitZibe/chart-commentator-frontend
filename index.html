@@ -681,6 +681,10 @@ header {
   .stats-row .stat:nth-child(4){border-top:1px solid var(--border);}
   .stats-row .stat:nth-child(5){border-top:1px solid var(--border); border-right:none;}
 }
+@keyframes tickerMove {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
 </style>
 </head>
 <body>
@@ -706,6 +710,166 @@ header {
     <div class="clock" id="clock">00:00:00</div>
   </div>
 </header>
+
+<!-- NEWS TICKER -->
+<div style="background:rgba(77,159,255,0.06);border-bottom:1px solid rgba(77,159,255,0.12);height:34px;display:flex;align-items:center;overflow:hidden;">
+  <div style="flex-shrink:0;padding:0 14px;font-family:'JetBrains Mono',monospace;font-size:9px;color:#4d9fff;text-transform:uppercase;letter-spacing:0.12em;border-right:1px solid rgba(77,159,255,0.2);height:100%;display:flex;align-items:center;gap:6px;background:rgba(77,159,255,0.08);">
+    <span id="ticker-dot" style="width:5px;height:5px;border-radius:50%;background:#4d9fff;display:inline-block;"></span>
+    LIVE INTEL
+  </div>
+  <div style="overflow:hidden;flex:1;height:100%;position:relative;">
+    <div id="ticker-track" style="display:inline-flex;align-items:center;height:100%;white-space:nowrap;font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(240,240,248,0.55);padding-left:24px;gap:48px;animation:tickerMove 50s linear infinite;">
+      <span>🟡 NQ — Watch the 29,200 zone for FVG fill opportunity</span>
+      <span>🟣 Gold — Asian session OB holding as key support at 4,480</span>
+      <span>🔵 ES — Structure bullish above 5,280, targeting 5,320 liquidity</span>
+      <span>⚡ Funded traders — Keep daily loss under 2% of account size</span>
+      <span>🟡 NQ — Equal highs at 29,450 acting as sell-side liquidity pool</span>
+      <span>📡 Chartly detects FVGs, Order Blocks and sharp entries in real time</span>
+      <span>🟡 NQ — Watch the 29,200 zone for FVG fill opportunity</span>
+      <span>🟣 Gold — Asian session OB holding as key support at 4,480</span>
+      <span>🔵 ES — Structure bullish above 5,280, targeting 5,320 liquidity</span>
+      <span>⚡ Funded traders — Keep daily loss under 2% of account size</span>
+    </div>
+  </div>
+</div>
+
+<!-- NAV TABS -->
+<div style="display:flex;align-items:center;border-bottom:1px solid rgba(255,255,255,0.07);gap:0;">
+  <button onclick="showTab('dashboard')" id="tab-dashboard" style="background:none;border:none;border-bottom:2px solid #00e87a;color:#f0f0f8;font-family:'Syne',sans-serif;font-size:13px;font-weight:600;padding:12px 24px;cursor:pointer;letter-spacing:-0.01em;">📊 Dashboard</button>
+  <button onclick="showTab('funded')" id="tab-funded" style="background:none;border:none;border-bottom:2px solid transparent;color:rgba(240,240,248,0.4);font-family:'Syne',sans-serif;font-size:13px;font-weight:600;padding:12px 24px;cursor:pointer;letter-spacing:-0.01em;transition:all 0.2s;">🏆 Get Funded</button>
+  <button onclick="showTab('guide')" id="tab-guide" style="background:none;border:none;border-bottom:2px solid transparent;color:rgba(240,240,248,0.4);font-family:'Syne',sans-serif;font-size:13px;font-weight:600;padding:12px 24px;cursor:pointer;letter-spacing:-0.01em;transition:all 0.2s;">📖 Setup Guide</button>
+</div>
+
+<!-- FUNDED PAGE -->
+<div id="page-funded" style="display:none;padding:3rem 2rem;max-width:900px;margin:0 auto;">
+  <div style="text-align:center;margin-bottom:3rem;">
+    <div style="font-size:48px;margin-bottom:1rem;">🏆</div>
+    <h1 style="font-size:36px;font-weight:800;letter-spacing:-0.03em;margin-bottom:12px;">Road to <span style="color:#00e87a;">Funded</span></h1>
+    <p style="font-family:'JetBrains Mono',monospace;font-size:13px;color:rgba(240,240,248,0.5);max-width:500px;margin:0 auto;line-height:1.8;">Use Chartly to pass your prop firm eval. Follow these rules and let the AI handle the chart reading.</p>
+  </div>
+
+  <!-- Firm selector -->
+  <div style="display:flex;gap:12px;justify-content:center;margin-bottom:2.5rem;flex-wrap:wrap;">
+    <button onclick="setFirm('topstep')" id="firm-topstep" style="background:rgba(0,232,122,0.1);border:1px solid rgba(0,232,122,0.3);color:#00e87a;font-family:'JetBrains Mono',monospace;font-size:12px;padding:8px 18px;border-radius:4px;cursor:pointer;">TopStep</button>
+    <button onclick="setFirm('apex')" id="firm-apex" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:rgba(240,240,248,0.5);font-family:'JetBrains Mono',monospace;font-size:12px;padding:8px 18px;border-radius:4px;cursor:pointer;">Apex</button>
+    <button onclick="setFirm('ftmo')" id="firm-ftmo" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:rgba(240,240,248,0.5);font-family:'JetBrains Mono',monospace;font-size:12px;padding:8px 18px;border-radius:4px;cursor:pointer;">FTMO</button>
+    <button onclick="setFirm('mff')" id="firm-mff" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:rgba(240,240,248,0.5);font-family:'JetBrains Mono',monospace;font-size:12px;padding:8px 18px;border-radius:4px;cursor:pointer;">My Funded FX</button>
+  </div>
+
+  <div id="firm-rules" style="margin-bottom:2.5rem;"></div>
+
+  <!-- The 5 commandments -->
+  <div style="background:linear-gradient(135deg,rgba(77,159,255,0.06),rgba(191,90,242,0.06));border:1px solid rgba(77,159,255,0.15);border-radius:8px;padding:2rem;margin-bottom:2rem;">
+    <h2 style="font-size:18px;font-weight:700;margin-bottom:1.5rem;letter-spacing:-0.02em;">⚡ The 5 Commandments of Eval Trading</h2>
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      <div style="display:flex;gap:14px;align-items:flex-start;">
+        <div style="width:28px;height:28px;border-radius:50%;background:rgba(0,232,122,0.15);border:1px solid rgba(0,232,122,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'JetBrains Mono',monospace;font-size:11px;color:#00e87a;font-weight:600;">1</div>
+        <div><div style="font-weight:600;margin-bottom:3px;">Only trade the NY open (8:30–11:30 AM EST)</div><div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(240,240,248,0.45);line-height:1.7;">This is when Smart Money moves. Chartly fires the best signals during this window. Never trade overnight or during low volume.</div></div>
+      </div>
+      <div style="display:flex;gap:14px;align-items:flex-start;">
+        <div style="width:28px;height:28px;border-radius:50%;background:rgba(0,232,122,0.15);border:1px solid rgba(0,232,122,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'JetBrains Mono',monospace;font-size:11px;color:#00e87a;font-weight:600;">2</div>
+        <div><div style="font-weight:600;margin-bottom:3px;">Max 3 trades per session</div><div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(240,240,248,0.45);line-height:1.7;">Overtrading kills eval accounts. Wait for Chartly to identify a clean FVG or OB entry. If you miss 3 setups, you're done for the day.</div></div>
+      </div>
+      <div style="display:flex;gap:14px;align-items:flex-start;">
+        <div style="width:28px;height:28px;border-radius:50%;background:rgba(0,232,122,0.15);border:1px solid rgba(0,232,122,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'JetBrains Mono',monospace;font-size:11px;color:#00e87a;font-weight:600;">3</div>
+        <div><div style="font-weight:600;margin-bottom:3px;">Never revenge trade</div><div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(240,240,248,0.45);line-height:1.7;">If you take a loss, close the platform. Come back tomorrow. One bad trade followed by a revenge trade is how eval accounts blow up.</div></div>
+      </div>
+      <div style="display:flex;gap:14px;align-items:flex-start;">
+        <div style="width:28px;height:28px;border-radius:50%;background:rgba(0,232,122,0.15);border:1px solid rgba(0,232,122,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'JetBrains Mono',monospace;font-size:11px;color:#00e87a;font-weight:600;">4</div>
+        <div><div style="font-weight:600;margin-bottom:3px;">Always use the stop loss Chartly gives you</div><div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(240,240,248,0.45);line-height:1.7;">Every Chartly signal includes a stop loss level. Put it in before you enter. No exceptions. The stop protects your daily drawdown limit.</div></div>
+      </div>
+      <div style="display:flex;gap:14px;align-items:flex-start;">
+        <div style="width:28px;height:28px;border-radius:50%;background:rgba(0,232,122,0.15);border:1px solid rgba(0,232,122,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'JetBrains Mono',monospace;font-size:11px;color:#00e87a;font-weight:600;">5</div>
+        <div><div style="font-weight:600;margin-bottom:3px;">Hit your daily goal and stop</div><div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(240,240,248,0.45);line-height:1.7;">If you're up 1% on the day, close everything and walk away. Greed is what fails evals. Lock the profit in and come back tomorrow.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Eval progress tracker -->
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.5rem;">
+    <h2 style="font-size:16px;font-weight:700;margin-bottom:1.25rem;letter-spacing:-0.02em;">📈 Eval Progress Tracker</h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1rem;">
+      <div>
+        <label style="font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(240,240,248,0.4);display:block;margin-bottom:4px;">ACCOUNT SIZE</label>
+        <select id="eval-size" onchange="updateEvalTracker()" style="width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:#f0f0f8;font-family:'JetBrains Mono',monospace;font-size:12px;padding:6px 10px;border-radius:4px;outline:none;">
+          <option value="25000">$25,000</option>
+          <option value="50000" selected>$50,000</option>
+          <option value="100000">$100,000</option>
+          <option value="150000">$150,000</option>
+        </select>
+      </div>
+      <div>
+        <label style="font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(240,240,248,0.4);display:block;margin-bottom:4px;">CURRENT P&L</label>
+        <input id="eval-pnl" oninput="updateEvalTracker()" type="number" placeholder="e.g. 850" style="width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:#f0f0f8;font-family:'JetBrains Mono',monospace;font-size:12px;padding:6px 10px;border-radius:4px;outline:none;">
+      </div>
+    </div>
+    <div id="eval-bars" style="display:flex;flex-direction:column;gap:10px;"></div>
+  </div>
+</div>
+
+<!-- GUIDE PAGE -->
+<div id="page-guide" style="display:none;padding:3rem 2rem;max-width:860px;margin:0 auto;">
+  <div style="text-align:center;margin-bottom:3rem;">
+    <div style="font-size:48px;margin-bottom:1rem;">📖</div>
+    <h1 style="font-size:36px;font-weight:800;letter-spacing:-0.03em;margin-bottom:12px;">Setup <span style="background:linear-gradient(135deg,#4d9fff,#bf5af2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Guide</span></h1>
+    <p style="font-family:'JetBrains Mono',monospace;font-size:13px;color:rgba(240,240,248,0.5);line-height:1.8;">Get Chartly running in under 5 minutes. No coding needed.</p>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:16px;">
+
+    <div style="background:linear-gradient(135deg,rgba(77,159,255,0.06),rgba(77,159,255,0.02));border:1px solid rgba(77,159,255,0.18);border-radius:8px;padding:1.5rem;display:flex;gap:1.25rem;">
+      <div style="width:36px;height:36px;border-radius:50%;background:rgba(77,159,255,0.15);border:1px solid rgba(77,159,255,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'JetBrains Mono',monospace;font-size:14px;color:#4d9fff;font-weight:700;">1</div>
+      <div>
+        <div style="font-size:16px;font-weight:700;margin-bottom:6px;">Subscribe to TradingView Essential or higher</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:rgba(240,240,248,0.5);line-height:1.8;">Go to tradingview.com/pricing and subscribe to Essential ($14.95/mo) or higher. You need this to unlock webhook alerts. The free plan does not support webhooks.</div>
+        <a href="https://tradingview.com/pricing" target="_blank" style="display:inline-block;margin-top:8px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#4d9fff;text-decoration:none;">→ tradingview.com/pricing</a>
+      </div>
+    </div>
+
+    <div style="background:linear-gradient(135deg,rgba(191,90,242,0.06),rgba(191,90,242,0.02));border:1px solid rgba(191,90,242,0.18);border-radius:8px;padding:1.5rem;display:flex;gap:1.25rem;">
+      <div style="width:36px;height:36px;border-radius:50%;background:rgba(191,90,242,0.15);border:1px solid rgba(191,90,242,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'JetBrains Mono',monospace;font-size:14px;color:#bf5af2;font-weight:700;">2</div>
+      <div>
+        <div style="font-size:16px;font-weight:700;margin-bottom:6px;">Open your chart and create an alert</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:rgba(240,240,248,0.5);line-height:1.8;">Open any chart on TradingView (NQ, ES, Gold, etc). Press Option+A (Mac) or Alt+A (Windows) to open the alert creation window. Set the condition to a price level you want to watch.</div>
+      </div>
+    </div>
+
+    <div style="background:linear-gradient(135deg,rgba(0,232,122,0.06),rgba(0,232,122,0.02));border:1px solid rgba(0,232,122,0.18);border-radius:8px;padding:1.5rem;display:flex;gap:1.25rem;">
+      <div style="width:36px;height:36px;border-radius:50%;background:rgba(0,232,122,0.15);border:1px solid rgba(0,232,122,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'JetBrains Mono',monospace;font-size:14px;color:#00e87a;font-weight:700;">3</div>
+      <div>
+        <div style="font-size:16px;font-weight:700;margin-bottom:6px;">Add the webhook URL</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:rgba(240,240,248,0.5);line-height:1.8;">In the alert creation window, click Notifications → check Webhook URL → paste this URL:</div>
+        <div style="margin-top:8px;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.08);border-radius:4px;padding:8px 12px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#4d9fff;word-break:break-all;">https://chart-commentator-backend-production.up.railway.app/webhook</div>
+      </div>
+    </div>
+
+    <div style="background:linear-gradient(135deg,rgba(255,214,10,0.06),rgba(255,214,10,0.02));border:1px solid rgba(255,214,10,0.18);border-radius:8px;padding:1.5rem;display:flex;gap:1.25rem;">
+      <div style="width:36px;height:36px;border-radius:50%;background:rgba(255,214,10,0.15);border:1px solid rgba(255,214,10,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'JetBrains Mono',monospace;font-size:14px;color:#ffd60a;font-weight:700;">4</div>
+      <div>
+        <div style="font-size:16px;font-weight:700;margin-bottom:6px;">Paste the message payload</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:rgba(240,240,248,0.5);line-height:1.8;">Click on the Message field in the alert window. Delete everything in it and paste this exactly — do not change anything except YOUR_SECRET:</div>
+        <div style="margin-top:8px;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.08);border-radius:4px;padding:8px 12px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#ffd60a;word-break:break-all;">{"secret":"YOUR_SECRET","symbol":"{{ticker}}","interval":"{{interval}}","price":"{{close}}","message":"{{strategy.order.comment}}"}</div>
+        <div style="margin-top:8px;font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(240,240,248,0.35);">Replace YOUR_SECRET with the password given to you by Chartly.</div>
+      </div>
+    </div>
+
+    <div style="background:linear-gradient(135deg,rgba(255,45,85,0.06),rgba(255,45,85,0.02));border:1px solid rgba(255,45,85,0.18);border-radius:8px;padding:1.5rem;display:flex;gap:1.25rem;">
+      <div style="width:36px;height:36px;border-radius:50%;background:rgba(255,45,85,0.15);border:1px solid rgba(255,45,85,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'JetBrains Mono',monospace;font-size:14px;color:#ff2d55;font-weight:700;">5</div>
+      <div>
+        <div style="font-size:16px;font-weight:700;margin-bottom:6px;">Create the alert and you're done</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:rgba(240,240,248,0.5);line-height:1.8;">Click Create. The next time price hits your level, Chartly automatically receives the alert, analyzes the chart structure using Smart Money Concepts, and posts the commentary here in real time. No further setup needed.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="margin-top:2rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.07);border-radius:8px;padding:1.25rem;text-align:center;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(240,240,248,0.35);line-height:1.8;">Need help? DM us on TikTok or Twitter · Your webhook secret was provided when you subscribed</div>
+  </div>
+</div>
+
+<!-- DASHBOARD PAGE STARTS HERE -->
+<div id="page-dashboard">
 
 <div class="stats-row">
   <div class="stat">
@@ -854,10 +1018,137 @@ header {
 
   </div>
 </div>
+</div> <!-- end page-dashboard -->
 </div>
 
 <script>
 const BACKEND = "https://chart-commentator-backend-production.up.railway.app";
+document.getElementById("wh-url").textContent = BACKEND + "/webhook";
+
+// TAB SWITCHING
+function showTab(tab) {
+  ["dashboard","funded","guide"].forEach(t => {
+    const page = document.getElementById("page-"+t);
+    const btn = document.getElementById("tab-"+t);
+    if (page) page.style.display = t === tab ? "block" : "none";
+    if (btn) {
+      btn.style.borderBottom = t === tab ? "2px solid #00e87a" : "2px solid transparent";
+      btn.style.color = t === tab ? "#f0f0f8" : "rgba(240,240,248,0.4)";
+    }
+  });
+}
+
+// FIRM RULES
+const firmData = {
+  topstep: {
+    name: "TopStep",
+    rules: [
+      { label: "Daily Loss Limit", value: "2% of account", color: "#ff2d55" },
+      { label: "Max Drawdown", value: "4% of account", color: "#ff9f0a" },
+      { label: "Profit Target", value: "6% of account", color: "#00e87a" },
+      { label: "Minimum Trading Days", value: "5 days", color: "#4d9fff" },
+      { label: "Recommended Session", value: "NY Open 8:30–11:30 AM", color: "#bf5af2" },
+    ]
+  },
+  apex: {
+    name: "Apex Trader Funding",
+    rules: [
+      { label: "Daily Loss Limit", value: "No daily limit", color: "#00e87a" },
+      { label: "Max Drawdown", value: "Trailing $2,500 (50K)", color: "#ff9f0a" },
+      { label: "Profit Target", value: "$3,000 (50K)", color: "#00e87a" },
+      { label: "Minimum Trading Days", value: "7 days", color: "#4d9fff" },
+      { label: "Recommended Session", value: "NY Open 8:30–11:30 AM", color: "#bf5af2" },
+    ]
+  },
+  ftmo: {
+    name: "FTMO",
+    rules: [
+      { label: "Daily Loss Limit", value: "5% of account", color: "#ff2d55" },
+      { label: "Max Drawdown", value: "10% of account", color: "#ff9f0a" },
+      { label: "Profit Target", value: "10% (Phase 1), 5% (Phase 2)", color: "#00e87a" },
+      { label: "Minimum Trading Days", value: "4 days", color: "#4d9fff" },
+      { label: "Recommended Session", value: "London + NY overlap", color: "#bf5af2" },
+    ]
+  },
+  mff: {
+    name: "My Funded FX",
+    rules: [
+      { label: "Daily Loss Limit", value: "5% of account", color: "#ff2d55" },
+      { label: "Max Drawdown", value: "10% of account", color: "#ff9f0a" },
+      { label: "Profit Target", value: "8% (Phase 1)", color: "#00e87a" },
+      { label: "Minimum Trading Days", value: "5 days", color: "#4d9fff" },
+      { label: "Recommended Session", value: "NY Open 8:30–11:30 AM", color: "#bf5af2" },
+    ]
+  }
+};
+
+function setFirm(firm) {
+  Object.keys(firmData).forEach(f => {
+    const btn = document.getElementById("firm-"+f);
+    if (btn) {
+      btn.style.background = f === firm ? "rgba(0,232,122,0.1)" : "rgba(255,255,255,0.04)";
+      btn.style.borderColor = f === firm ? "rgba(0,232,122,0.3)" : "rgba(255,255,255,0.1)";
+      btn.style.color = f === firm ? "#00e87a" : "rgba(240,240,248,0.5)";
+    }
+  });
+
+  const data = firmData[firm];
+  const container = document.getElementById("firm-rules");
+  if (!container || !data) return;
+
+  container.innerHTML = `
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.5rem;">
+      <h3 style="font-size:15px;font-weight:700;margin-bottom:1rem;color:#f0f0f8;">${data.name} — Eval Rules</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;">
+        ${data.rules.map(r => `
+          <div style="background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.06);border-radius:6px;padding:12px;">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:rgba(240,240,248,0.35);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px;">${r.label}</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:${r.color};">${r.value}</div>
+          </div>
+        `).join("")}
+      </div>
+    </div>
+  `;
+}
+
+function updateEvalTracker() {
+  const size = parseFloat(document.getElementById("eval-size")?.value) || 50000;
+  const pnl = parseFloat(document.getElementById("eval-pnl")?.value) || 0;
+  const container = document.getElementById("eval-bars");
+  if (!container) return;
+
+  const target = size * 0.06;
+  const dailyLimit = size * 0.02;
+  const maxDD = size * 0.04;
+  const progress = Math.min((pnl / target) * 100, 100);
+  const riskUsed = pnl < 0 ? Math.min((Math.abs(pnl) / dailyLimit) * 100, 100) : 0;
+
+  container.innerHTML = `
+    <div style="margin-bottom:12px;">
+      <div style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(240,240,248,0.4);margin-bottom:6px;">
+        <span>Profit Target Progress</span>
+        <span style="color:#00e87a;">$${pnl > 0 ? pnl.toLocaleString() : 0} / $${target.toLocaleString()}</span>
+      </div>
+      <div style="height:6px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;">
+        <div style="height:100%;width:${Math.max(progress,0)}%;background:linear-gradient(90deg,#00e87a,#4d9fff);border-radius:3px;transition:width 0.6s;"></div>
+      </div>
+    </div>
+    <div>
+      <div style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(240,240,248,0.4);margin-bottom:6px;">
+        <span>Daily Risk Used</span>
+        <span style="color:${riskUsed > 70 ? '#ff2d55' : '#ff9f0a'};">$${Math.abs(pnl < 0 ? pnl : 0).toLocaleString()} / $${dailyLimit.toLocaleString()}</span>
+      </div>
+      <div style="height:6px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;">
+        <div style="height:100%;width:${riskUsed}%;background:linear-gradient(90deg,#ff9f0a,#ff2d55);border-radius:3px;transition:width 0.6s;"></div>
+      </div>
+    </div>
+  `;
+}
+
+// Init defaults
+setFirm("topstep");
+updateEvalTracker();
+
 document.getElementById("wh-url").textContent = BACKEND + "/webhook";
 
 let knownIds = new Set();
