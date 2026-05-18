@@ -1142,11 +1142,19 @@ function renderAlert(alert) {
     </div>
   ` : "";
 
+  const newsHTML = alert.news ? `
+    <div style="margin-top:10px;padding:8px 10px;background:rgba(77,159,255,0.06);border:1px solid rgba(77,159,255,0.15);border-radius:4px;">
+      <div style="font-family:var(--mono);font-size:9px;color:var(--blue);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px;">📰 Market Context</div>
+      <div style="font-family:var(--mono);font-size:11px;color:rgba(240,240,248,0.6);line-height:1.7;">${alert.news}</div>
+    </div>` : "";
+
+  const chartHTML = alert.chartImage
+    ? `<img src="${alert.chartImage}" style="width:100%;display:block;border-radius:4px 4px 0 0;" alt="Chart Analysis"/>`
+    : `<canvas class="mini-chart-canvas" height="60" style="width:100%;display:block;"></canvas>`;
+
   card.innerHTML = `
     <div class="card-shell ${primary}">
-      <div class="mini-chart-wrap">
-        <canvas class="mini-chart-canvas" height="60"></canvas>
-      </div>
+      <div class="mini-chart-wrap">${chartHTML}</div>
       <div class="signal-tags">${sigTagsHTML}</div>
       <div class="card-body">
         <div class="card-meta">
@@ -1160,12 +1168,13 @@ function renderAlert(alert) {
           </div>
         </div>
         <div class="commentary-text"></div>
+        ${newsHTML}
         ${levelsHTML}
       </div>
     </div>
   `;
 
-  // draw mini chart
+  // draw mini chart only if no server image
   setTimeout(()=>{
     const mc = card.querySelector(".mini-chart-canvas");
     if (mc && price) drawMiniChart(mc, price, primary.toUpperCase());
