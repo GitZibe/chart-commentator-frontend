@@ -1229,7 +1229,9 @@ function setLive(live) {
 
 async function poll() {
   try {
-    const res = await fetch(BACKEND + "/alerts");
+    const res = await fetch(BACKEND + "/alerts", {
+      headers: { "X-Access-Token": "Blsafi306!Blsafi306!" }
+    });
     if (!res.ok) throw new Error();
     const {alerts} = await res.json();
     setLive(true);
